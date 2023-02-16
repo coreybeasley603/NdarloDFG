@@ -12,7 +12,6 @@ ENVIRONMENT = os.environ.get("ENVIRONMENT", "dev")
 def success(job: Job, connection: Any, result: Any, *args, **kwargs):
     email = job.meta.get("email")
     if email is None:
-        print("Missing email address, not sending email")
         return
 
     filename = job.meta.get("uploaded_filename")
@@ -38,11 +37,9 @@ def failure(job: Job, connection, type, value, traceback):
     email = job.meta.get("email")
     if email is None:
         print("Missing email address, not sending email")
-        return
 
     try:
         mailer.send_failure_email(email)
     except:
-        print("Unable to send email in failed job")
         if (ENVIRONMENT != 'dev'):
             raise Exception("Unable to send email in failed job")
